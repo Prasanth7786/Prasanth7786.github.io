@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELK Stack SIEM Project - Documentation</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        html {
+            height: 100%;
+            overflow-y: scroll;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+            background: #070b12;
+            color: #e5e7eb;
+            position: relative;
+        }
+
+        .particles-background, .cyber-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .documentation-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            min-height: calc(100vh - 4rem);
+        }
+
+        .documentation-container {
+            background: rgba(13, 17, 23, 0.95);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            overflow-y: auto;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 6px;
+            color: #00e5ff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .back-button:hover {
+            background: rgba(0, 229, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 229, 255, 0.1);
+        }
+
+        .back-button i {
+            font-size: 1.2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #fff;
+            border-bottom: 2px solid rgba(0, 229, 255, 0.2);
+            padding-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #00e5ff;
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: #40e9ff;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 229, 255, 0.1);
+            border-radius: 4px;
+            margin: 0.25rem;
+            font-family: 'Source Code Pro', monospace;
+            color: #00e5ff;
+            font-size: 0.9rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .documentation-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            background: rgba(0, 229, 255, 0.1);
+            border-radius: 8px;
+            color: #00e5ff;
+            text-decoration: none;
+            font-size: 1.25rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(0, 229, 255, 0.2);
+        }
+
+        .documentation-link:hover {
+            background: rgba(0, 229, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 229, 255, 0.1);
+        }
+
+        .documentation-link i {
+            font-size: 1.4rem;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        ul li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #00e5ff;
+        }
+
+        ul ul {
+            margin-top: 0.5rem;
+            margin-left: 1rem;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: rgba(0, 229, 255, 0.2);
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .documentation-content {
+                padding: 1rem;
+            }
+
+            .documentation-container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            h3 {
+                font-size: 1.2rem;
+            }
+        }
+
+        .honeypot-scan {
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(0, 229, 255, 0.1);
+        }
+        
+        .scan-image {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            border-radius: 4px;
+            margin: 0 auto;
+            display: block;
+        }
+        
+        .scan-caption {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 1rem;
+            margin-bottom: 0;
+            font-family: var(--font-mono);
+        }
+    </style>
+</head>
+<body class="loaded">
+    <!-- Background Effects -->
+    <div class="particles-background"></div>
+    <div class="cyber-grid"></div>
+
+    <main class="documentation-content">
+        <a href="../index.html#projects" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+            Back to Portfolio
+        </a>
+
+        <div class="documentation-container">
+            <h1><i class="fas fa-search"></i> Elastic SIEM Setup and Threat Detection using Honeypots</h1>
+
+            <h2>Project Overview</h2>
+            <p>This project demonstrates a complete SIEM deployment using the Elastic Stack (Elasticsearch, Logstash, Kibana) to monitor and analyze real-world cyber attacks. A combination of honeypots, including Cowrie (SSH honeypot) and a custom fake login page, were deployed to simulate attack surfaces. Filebeat was used to collect the logs from these honeypots and forward them to Elasticsearch. Kibana dashboards were created to visualize the data and SIEM detection rules were implemented to identify brute-force attacks.</p>
+
+            <div class="section-divider"></div>
+
+            <h2>Project Objectives</h2>
+            <ul>
+                <li>Deploy Elastic SIEM using the ELK stack to enable log analysis and threat detection</li>
+                <li>Simulate attack surfaces using Cowrie SSH honeypot and a custom web login form</li>
+                <li>Collect and forward logs with Filebeat for real-time analysis</li>
+                <li>Visualize attacker activity using Kibana dashboards</li>
+                <li>Set up detection rules and alerts to identify brute-force attempts and suspicious IP addresses</li>
+            </ul>
+
+            <div class="section-divider"></div>
+
+            <h2>Tools and Technologies Used</h2>
+            <h3>Elastic Stack (ELK):</h3>
+            <div style="margin-bottom: 1.5rem;">
+                <span class="tech-badge">Elasticsearch</span>
+                <span class="tech-badge">Logstash</span>
+                <span class="tech-badge">Kibana</span>
+            </div>
+
+            <h3>Security Tools:</h3>
+            <div style="margin-bottom: 1.5rem;">
+                <span class="tech-badge">Elastic SIEM</span>
+                <span class="tech-badge">Cowrie Honeypot</span>
+                <span class="tech-badge">Custom Fake Login Page</span>
+                <span class="tech-badge">Filebeat</span>
+                <span class="tech-badge">Kali Linux</span>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <h2>System Setup</h2>
+            <h3>1. ELK Stack Deployment</h3>
+            <ul>
+                <li>Elasticsearch, Logstash, and Kibana were installed and configured on an Ubuntu virtual machine</li>
+                <li>Logstash pipelines were set up to parse incoming logs from Filebeat</li>
+                <li>Kibana was configured to visualize data and manage SIEM detection rules</li>
+            </ul>
+
+            <div class="honeypot-scan">
+                <img src="../assets/images/elk.png" alt="ELK Stack architecture and components" class="scan-image">
+                <p class="scan-caption">ELK Stack deployment on Ubuntu VM</p>
+            </div>
+
+            <h3>2. Honeypot Setup</h3>
+            <ul>
+                <li>Cowrie was configured to emulate an SSH server and capture login attempts</li>
+                <li>A Flask-based fake login page was created to log web-based brute-force attempts</li>
+                <li>Both honeypots were hosted on the same Ubuntu VM</li>
+            </ul>
+
+            <div class="honeypot-scan">
+                <img src="../assets/images/nmap-scan.jpg" alt="Nmap scan showing open ports on honeypot" class="scan-image">
+                <p class="scan-caption">Nmap scan results showing honeypot's open ports (SSH, HTTP)</p>
+            </div>
+
+            <h3>3. Filebeat Configuration</h3>
+            <ul>
+                <li>Filebeat collected logs from Cowrie and the fake login page</li>
+                <li>Log files were parsed using custom modules and forwarded to Logstash</li>
+                <li>Logstash enriched and transformed the logs before storing them in Elasticsearch</li>
+            </ul>
+
+            <div class="honeypot-scan">
+                <img src="../assets/images/filebeat-config.png" alt="Filebeat configuration showing log inputs" class="scan-image">
+                <p class="scan-caption">Filebeat configuration showing log collection from Cowrie honeypot and fake login page</p>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <h2>Threat Simulation and Detection</h2>
+            <h3>1. Brute-Force Attack Simulation</h3>
+            <ul>
+                <li>Hydra on Kali Linux was used to simulate brute-force attacks on:
+                    <ul>
+                        <li>Cowrie SSH honeypot</li>
+                        <li>Flask-based fake login form</li>
+                    </ul>
+                </li>
+                <li>Logs generated by these attacks were captured and indexed by Elasticsearch</li>
+            </ul>
+
+            <div class="honeypot-scan">
+                <img src="../assets/images/brute-force.png" alt="Brute force attack simulation using Hydra" class="scan-image">
+                <p class="scan-caption">Hydra tool performing brute-force attack against the honeypot services</p>
+            </div>
+
+            <h3>2. Alert Setup in Elastic SIEM</h3>
+            <ul>
+                <li>Custom detection rules were created to identify:
+                    <ul>
+                        <li>Multiple failed SSH login attempts</li>
+                        <li>Multiple failed web login attempts</li>
+                        <li>Unusual IP addresses accessing the system</li>
+                    </ul>
+                </li>
+                <li>Threshold-based alerts triggered when the count of failed attempts from a single IP crossed a limit</li>
+            </ul>
+
+            <div class="honeypot-scan">
+                <img src="../assets/images/log-1.png" alt="SIEM alert logs showing SSH brute force attempts" class="scan-image">
+                <p class="scan-caption">SIEM alerts showing SSH brute-force attempts detected from multiple source IPs</p>
+            </div>
+
+            <div class="honeypot-scan">
+                <img src="../assets/images/log-2.png" alt="SIEM alerts showing web login brute force attempts" class="scan-image">
+                <p class="scan-caption">SIEM alerts showing brute-force attempts detected on the web login page</p>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <h2>Visualization and Dashboards</h2>
+            <h3>Dashboards Included:</h3>
+            <ul>
+                <li>Top Attacking IP Addresses: Identified the most frequent source IPs of login attempts</li>
+                <li>Most Used Usernames: Showed commonly guessed usernames by attackers</li>
+                <li>Most Used Passwords: Displayed commonly attempted passwords</li>
+                <li>Login Attempts Over Time: Visualized brute-force activity over time</li>
+            </ul>
+
+            <div class="honeypot-scan">
+                <img src="../assets/images/dashboard.png" alt="Kibana dashboard showing username and password patterns" class="scan-image">
+                <p class="scan-caption">Kibana dashboard displaying most commonly used usernames and passwords in brute-force attempts</p>
+            </div>
+
+            <div class="honeypot-scan">
+                <img src="../assets/images/ip.png" alt="Top attacking IP addresses visualization" class="scan-image">
+                <p class="scan-caption">Visualization of top attacking IP addresses</p>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <h2>Results</h2>
+            <ul>
+                <li>The system successfully detected and visualized brute-force attacks</li>
+                <li>All login attempts were recorded with metadata (username, password, source IP, timestamp)</li>
+                <li>Kibana dashboards provided insights into attacker behavior and trends</li>
+                <li>Elastic SIEM generated alerts in near real-time based on the detection rules</li>
+            </ul>
+
+            <div class="section-divider"></div>
+
+            <h2>Conclusion</h2>
+            <p>The project demonstrates the effective use of Elastic SIEM for monitoring, detecting, and visualizing cyber attacks on honeypots. With real-time log ingestion, enrichment, and analysis, the system provided actionable insights through alerts and dashboards. This hands-on experience solidified an understanding of deploying SIEM solutions and interpreting attacker behavior.</p>
+
+            <div class="section-divider"></div>
+
+            <h2>Future Improvements</h2>
+            <ul>
+                <li>Integrate additional honeypots (e.g., HTTP/FTP emulators)</li>
+                <li>Apply machine learning features in Kibana for anomaly detection</li>
+                <li>Configure email or webhook alerts for critical detection rules</li>
+                <li>Deploy a reverse proxy or WAF for advanced logging and response</li>
+            </ul>
+        </div>
+    </main>
+
+    <script src="../script.js"></script>
+</body>
+</html> 
