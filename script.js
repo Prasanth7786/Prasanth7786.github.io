@@ -414,6 +414,11 @@ function initParticles() {
     // Clear existing particles
     container.innerHTML = '';
     
+    // Ensure container is visible
+    container.style.display = 'block';
+    container.style.visibility = 'visible';
+    container.style.opacity = '1';
+    
     const particleCount = window.innerWidth < 768 ? 30 : 50;
     
     for (let i = 0; i < particleCount; i++) {
@@ -537,6 +542,9 @@ function initScrollAnimations() {
 
 // Initialize everything after boot sequence
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize particles immediately
+    initParticles();
+    
     // Initialize active section highlighting
     initializeActiveSection();
     
@@ -544,7 +552,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const isMobile = window.innerWidth <= 768;
     
     if (isMobile) {
-        // Disable all animations on mobile
+        // Disable all animations on mobile except particles
         document.querySelectorAll('.fade-in, .section, .section-title, .skill-category, .certificate-card, .project-card').forEach(element => {
             element.style.opacity = '1';
             element.style.transform = 'none';
@@ -552,8 +560,7 @@ document.addEventListener('DOMContentLoaded', () => {
             element.classList.add('visible');
         });
     } else {
-        // Initialize animations for desktop
-        initParticles();
+        // Initialize other animations for desktop
         initMatrixRain();
         initScrollAnimations();
     }
@@ -563,9 +570,10 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
+            initParticles(); // Always reinitialize particles on resize
             const isMobile = window.innerWidth <= 768;
             if (isMobile) {
-                // Disable animations on mobile
+                // Disable animations on mobile except particles
                 document.querySelectorAll('.fade-in, .section, .section-title, .skill-category, .certificate-card, .project-card').forEach(element => {
                     element.style.opacity = '1';
                     element.style.transform = 'none';
