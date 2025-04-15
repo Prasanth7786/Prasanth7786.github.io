@@ -179,6 +179,80 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 229, 255, 0.1);
         }
+
+        @media (max-width: 768px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                padding: 1rem 0;
+            }
+
+            .project-content {
+                padding: 1.5rem;
+                height: auto;
+            }
+
+            .project-header {
+                gap: 0.75rem;
+            }
+
+            .project-header h3 {
+                font-size: 1.2rem;
+                line-height: 1.4;
+            }
+
+            .project-content p {
+                font-size: 0.95rem;
+                line-height: 1.5;
+                margin: 0.75rem 0;
+            }
+
+            .project-corner-link {
+                width: 100%;
+                justify-content: center;
+                padding: 0.75rem;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .projects-grid {
+                gap: 1rem;
+                padding: 0.5rem 0;
+            }
+
+            .project-content {
+                padding: 1rem;
+            }
+
+            .project-header {
+                gap: 0.5rem;
+            }
+
+            .project-header i {
+                font-size: 1.2rem;
+            }
+
+            .project-header h3 {
+                font-size: 1.1rem;
+            }
+
+            .project-content p {
+                font-size: 0.9rem;
+                line-height: 1.4;
+                margin: 0.5rem 0;
+            }
+
+            .project-corner-link {
+                padding: 0.6rem;
+                font-size: 0.95rem;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+                margin-bottom: 1rem;
+            }
+        }
     </style>
 </head>
 <body class="loading">
