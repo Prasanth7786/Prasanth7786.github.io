@@ -585,25 +585,36 @@
             font-weight: bold;
         }
 
-        /* Particles Animation */
-        @keyframes float {
-            0% {
-                transform: translateY(0) translateX(0);
-            }
-            50% {
-                transform: translateY(-100px) translateX(50px);
-            }
-            100% {
-                transform: translateY(0) translateX(0);
-            }
+        .particles-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
         }
 
         .particle {
-            position: absolute;
+            position: fixed;
             background: var(--terminal-cyan);
             opacity: 0.1;
             border-radius: 50%;
             pointer-events: none;
+            will-change: transform;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0);
+            }
+            50% {
+                transform: translate(20px, -20px);
+            }
+            100% {
+                transform: translate(0, 0);
+            }
         }
     </style>
 </head>
