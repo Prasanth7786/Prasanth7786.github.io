@@ -409,7 +409,12 @@ document.addEventListener('DOMContentLoaded', () => {
 // Background Particles
 function initParticles() {
     const container = document.querySelector('.particles-background');
-    const particleCount = 50;
+    if (!container) return;
+
+    // Clear existing particles
+    container.innerHTML = '';
+    
+    const particleCount = window.innerWidth < 768 ? 30 : 50;
     
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
@@ -429,6 +434,23 @@ function initParticles() {
         container.appendChild(particle);
     }
 }
+
+// Add resize handler for particles
+window.addEventListener('resize', () => {
+    initParticles();
+});
+
+// Ensure particles are initialized when the page is fully loaded
+window.addEventListener('load', () => {
+    initParticles();
+});
+
+// Add visibility change handler to reinitialize particles when tab becomes visible
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+        initParticles();
+    }
+});
 
 // Matrix Rain Effect
 function initMatrixRain() {
