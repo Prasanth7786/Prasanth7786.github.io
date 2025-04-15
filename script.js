@@ -406,82 +406,48 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Add a flag to track if particles are already initialized
-let particlesInitialized = false;
-
-// Update initParticles function to prevent duplicates
+// Simplified particle system
 function initParticles() {
     const container = document.querySelector('.particles-background');
     if (!container) return;
 
-    // If particles are already initialized, just update their positions
-    if (particlesInitialized) {
-        const particles = container.querySelectorAll('.particle');
-        particles.forEach(particle => {
-            particle.style.left = `${Math.random() * 100}%`;
-            particle.style.top = `${Math.random() * 100}%`;
-        });
-        return;
-    }
-
-    // Clear existing particles
+    // Clear any existing particles
     container.innerHTML = '';
     
-    // Ensure container is visible
-    container.style.display = 'block';
-    container.style.visibility = 'visible';
-    container.style.opacity = '1';
-    
-    const particleCount = window.innerWidth < 768 ? 20 : 50; // Reduced count for mobile
+    // Reduced particle count for better performance
+    const particleCount = window.innerWidth < 768 ? 15 : 30;
     
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         particle.className = 'particle';
         
-        // Random size between 2 and 4 pixels
-        const size = Math.random() * 2 + 2;
+        // Smaller size for better performance
+        const size = Math.random() * 2 + 1;
         particle.style.width = `${size}px`;
         particle.style.height = `${size}px`;
         
-        // Random position
+        // Fixed position relative to viewport
         particle.style.left = `${Math.random() * 100}%`;
         particle.style.top = `${Math.random() * 100}%`;
         
-        // Animation
-        particle.style.animation = `float ${Math.random() * 10 + 5}s linear infinite`;
+        // Slower animation for better performance
+        const duration = Math.random() * 5 + 10;
+        particle.style.animation = `float ${duration}s linear infinite`;
+        
         container.appendChild(particle);
     }
-
-    particlesInitialized = true;
 }
 
-// Debounce function to limit how often a function can be called
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-// Create a debounced version of initParticles
-const debouncedInitParticles = debounce(initParticles, 250);
-
-// Update event listeners to use debounced version
-window.addEventListener('resize', debouncedInitParticles);
+// Initialize particles only once when the page loads
 window.addEventListener('load', initParticles);
-document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') {
-        initParticles();
-    }
-});
 
-// Remove scroll event listener that might be causing duplicate particles
+// Reinitialize particles only on orientation change for mobile
+window.addEventListener('orientationchange', initParticles);
+
+// Remove all other particle-related event listeners
 document.removeEventListener('scroll', initParticles);
+document.removeEventListener('visibilitychange', initParticles);
+window.removeEventListener('resize', initParticles);
 
 // Matrix Rain Effect
 function initMatrixRain() {
