@@ -406,10 +406,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Background Particles
+// Add a flag to track if particles are already initialized
+let particlesInitialized = false;
+
+// Update initParticles function to prevent duplicates
 function initParticles() {
     const container = document.querySelector('.particles-background');
     if (!container) return;
+
+    // If particles are already initialized, just update their positions
+    if (particlesInitialized) {
+        const particles = container.querySelectorAll('.particle');
+        particles.forEach(particle => {
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+        });
+        return;
+    }
 
     // Clear existing particles
     container.innerHTML = '';
@@ -419,7 +432,7 @@ function initParticles() {
     container.style.visibility = 'visible';
     container.style.opacity = '1';
     
-    const particleCount = window.innerWidth < 768 ? 30 : 50;
+    const particleCount = window.innerWidth < 768 ? 20 : 50; // Reduced count for mobile
     
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
@@ -438,24 +451,37 @@ function initParticles() {
         particle.style.animation = `float ${Math.random() * 10 + 5}s linear infinite`;
         container.appendChild(particle);
     }
+
+    particlesInitialized = true;
 }
 
-// Add resize handler for particles
-window.addEventListener('resize', () => {
-    initParticles();
-});
+// Debounce function to limit how often a function can be called
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
 
-// Ensure particles are initialized when the page is fully loaded
-window.addEventListener('load', () => {
-    initParticles();
-});
+// Create a debounced version of initParticles
+const debouncedInitParticles = debounce(initParticles, 250);
 
-// Add visibility change handler to reinitialize particles when tab becomes visible
+// Update event listeners to use debounced version
+window.addEventListener('resize', debouncedInitParticles);
+window.addEventListener('load', initParticles);
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
         initParticles();
     }
 });
+
+// Remove scroll event listener that might be causing duplicate particles
+document.removeEventListener('scroll', initParticles);
 
 // Matrix Rain Effect
 function initMatrixRain() {
