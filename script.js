@@ -594,4 +594,51 @@ style.textContent = `
         }
     }
 `;
-document.head.appendChild(style); 
+document.head.appendChild(style);
+
+const projectDetails = {
+    // ... existing projects ...
+    'splunk': {
+        title: 'Splunk-based Threat Detection and Log Monitoring',
+        description: `
+            <h3>Project Overview</h3>
+            <p>Implemented a centralized threat detection and monitoring solution using Splunk. The system was designed to ingest, parse, and visualize various log sources including SSH, FTP, and web login attempts, simulating real-world attacker behavior using tools like Hydra and Gobuster from a Kali Linux machine.</p>
+
+            <h3>Key Features</h3>
+            <ul>
+                <li>Deployed and configured Splunk on Ubuntu VM</li>
+                <li>Ingested logs from multiple sources: SSH, FTP, and web login/enumeration logs</li>
+                <li>Simulated real-world attacker behaviors using Kali Linux</li>
+                <li>Parsed and extracted fields using props.conf and transforms.conf</li>
+                <li>Created real-time alerts and dashboards to monitor attacker activity</li>
+            </ul>
+
+            <h3>Technical Implementation</h3>
+            <ul>
+                <li>Configured Splunk to ingest logs from multiple sources including auth.log, vsftpd.log, and custom JSON logs</li>
+                <li>Implemented custom field extraction using regex patterns for SSH logs</li>
+                <li>Created real-time alerts for detecting brute-force attacks and suspicious login patterns</li>
+                <li>Built interactive dashboards for visualizing attack patterns and monitoring system security</li>
+            </ul>
+
+            <h3>Tools & Technologies</h3>
+            <ul>
+                <li>Splunk Enterprise</li>
+                <li>Ubuntu Linux</li>
+                <li>Kali Linux</li>
+                <li>Hydra (for brute-force simulation)</li>
+                <li>Gobuster (for web enumeration)</li>
+                <li>Custom Flask Web Application</li>
+            </ul>
+
+            <h3>Results</h3>
+            <ul>
+                <li>Successfully detected and logged all simulated attacks in real-time</li>
+                <li>Created comprehensive dashboards for security monitoring</li>
+                <li>Implemented effective alerting system for suspicious activities</li>
+                <li>Demonstrated Splunk's capabilities as a SIEM solution</li>
+            </ul>
+        `,
+        image: 'assets/splunk-project.jpg'
+    }
+}; 
