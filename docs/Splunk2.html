@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Threat Detection and Analysis Using Splunk SIEM</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        html {
+            height: 100%;
+            overflow-y: scroll;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+            background: #070b12;
+            color: #e5e7eb;
+            position: relative;
+        }
+
+        .particles-background, .cyber-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .documentation-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            min-height: calc(100vh - 4rem);
+        }
+
+        .documentation-container {
+            background: rgba(13, 17, 23, 0.95);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            overflow-y: auto;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 6px;
+            color: #00e5ff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .back-button:hover {
+            background: rgba(0, 229, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 229, 255, 0.1);
+        }
+
+        .back-button i {
+            font-size: 1.2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #fff;
+            border-bottom: 2px solid rgba(0, 229, 255, 0.2);
+            padding-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #00e5ff;
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: #40e9ff;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 229, 255, 0.1);
+            border-radius: 4px;
+            margin: 0.25rem;
+            font-family: 'Source Code Pro', monospace;
+            color: #00e5ff;
+            font-size: 0.9rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .documentation-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            background: rgba(0, 229, 255, 0.1);
+            border-radius: 8px;
+            color: #00e5ff;
+            text-decoration: none;
+            font-size: 1.25rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(0, 229, 255, 0.2);
+        }
+
+        .documentation-link:hover {
+            background: rgba(0, 229, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 229, 255, 0.1);
+        }
+
+        .documentation-link i {
+            font-size: 1.4rem;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        ul li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #00e5ff;
+        }
+
+        ul ul {
+            margin-top: 0.5rem;
+            margin-left: 1rem;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: rgba(0, 229, 255, 0.2);
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .documentation-content {
+                padding: 1rem;
+            }
+
+            .documentation-container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            h3 {
+                font-size: 1.2rem;
+            }
+        }
+
+        .honeypot-scan {
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(0, 229, 255, 0.1);
+            background: rgba(13, 17, 23, 0.95);
+        }
+        
+        .scan-image {
+            max-width: 700px;
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .scan-caption {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 1rem;
+            margin-bottom: 0;
+            font-family: var(--font-mono);
+        }
+
+        .alert-flex-row {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+        .alert-flex-row .honeypot-scan {
+            flex: 1 1 320px;
+            max-width: 400px;
+            min-width: 260px;
+            margin: 0;
+        }
+        @media (max-width: 900px) {
+            .alert-flex-row {
+                flex-direction: column;
+                gap: 1.5rem;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body class="loaded">
+    <!-- Background Effects -->
+    <div class="particles-background"></div>
+    <div class="cyber-grid"></div>
+
+    <main class="documentation-content">
+        <a href="../index.html#projects" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+            Back to Portfolio
+        </a>
+
+        <div class="documentation-container">
+            <h1><i class="fas fa-shield-alt"></i> Real-Time Threat Detection and Analysis Using Splunk SIEM</h1>
+
+            <section class="project-overview">
+                <h2>Project Overview</h2>
+                <p>In this project, I implemented a centralized threat detection and monitoring solution using <strong>Splunk</strong>. The system was designed to ingest, parse, and visualize various log sources including SSH, FTP, and web login attempts, simulating real-world attacker behavior using tools like Hydra and Gobuster from a Kali Linux machine.</p>
+                <p>The logs were parsed and enriched in Splunk using custom configurations (<code>inputs.conf</code>, <code>props.conf</code>, <code>transforms.conf</code>, and <code>fields.conf</code>). Custom alerts were created to monitor brute-force attacks, enumeration attempts, and suspicious login behaviors.</p>
+            </section>
+
+            <section class="objectives">
+                <h2>Project Objectives</h2>
+                <ul>
+                    <li>Deploy and configure Splunk on an Ubuntu VM</li>
+                    <li>Ingest logs from multiple sources: SSH, FTP, and web login/enumeration logs</li>
+                    <li>Simulate real-world attacker behaviors using Kali Linux</li>
+                    <li>Parse and extract fields using <code>props.conf</code> and <code>transforms.conf</code></li>
+                    <li>Create real-time alerts and dashboards to monitor attacker activity</li>
+                </ul>
+            </section>
+
+            <section class="tools">
+                <h2>Tools and Technologies Used</h2>
+                <ul>
+                    <li><strong>Splunk</strong> (Enterprise Trial / Free)</li>
+                    <li><strong>Ubuntu Linux</strong> (Host machine)</li>
+                    <li><strong>Kali Linux</strong> (Attacker machine)</li>
+                    <li><strong>Hydra</strong> (for brute-force attack simulation)</li>
+                    <li><strong>Gobuster</strong> (for web directory enumeration)</li>
+                    <li><strong>Custom Flask Web Login Page</strong> (for capturing web logins)</li>
+                </ul>
+            </section>
+
+            <section class="setup">
+                <h2>System Setup and Log Sources</h2>
+                <h3>1. Splunk Installation and Configuration</h3>
+                <ul>
+                    <li>Installed Splunk on Ubuntu</li>
+                </ul>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/Splunk_login.png.png" alt="Splunk Login Page" class="scan-image">
+                    <p class="scan-caption">Splunk Enterprise login page after installation on Ubuntu</p>
+                </div>
+                <ul>
+                    <li>Created index <code>linux_logs</code></li>
+                </ul>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/Linux_logs.png" alt="Splunk linux_logs Index" class="scan-image" style="max-width:400px;">
+                    <p class="scan-caption">linux_logs index created in Splunk for centralized log storage</p>
+                </div>
+                <h2>Log Source Ingestion</h2>
+                <h3>inputs.conf</h3>
+                <h4><span style="color:#00e5ff">&#8594;</span> Configured inputs.conf to ingest SSH, FTP, Web server logs</h4>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/inputs.png" alt="inputs.conf Splunk configuration" class="scan-image">
+                    <p class="scan-caption">inputs.conf configuration in Splunk for log ingestion</p>
+                </div>
+            </section>
+
+            <section class="parsing">
+                <h2>🛠 Field Extraction and Parsing</h2>
+                <h3><code>props.conf</code></h3>
+                <ul>
+                    <li>SSH logs are routed to a transformation for custom regex parsing.</li>
+                    <li>Web logs in JSON format are automatically parsed using Splunk's JSON handling capabilities.</li>
+                </ul>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/props.png" alt="props.conf Splunk configuration" class="scan-image">
+                    <p class="scan-caption">props.conf configuration in Splunk for field extraction</p>
+                </div>
+                <h3><code>transforms.conf</code></h3>
+                <ul>
+                    <li>Extracts <code>action</code>, <code>user</code>, and <code>src_ip</code> fields from SSH logs.</li>
+                </ul>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/transforms.png" alt="transforms.conf Splunk configuration" class="scan-image">
+                    <p class="scan-caption">transforms.conf configuration in Splunk for SSH log field extraction</p>
+                </div>
+                <h3><code>fields.conf</code></h3>
+                <ul>
+                    <li>Ensures the extracted fields are indexed and available for efficient searching.</li>
+                </ul>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/fields.png" alt="fields.conf Splunk configuration" class="scan-image">
+                    <p class="scan-caption">fields.conf configuration in Splunk for indexing extracted fields</p>
+                </div>
+            </section>
+
+            <section class="simulation">
+                <h2>Threat Simulation using Kali Linux</h2>
+                <h3>1. SSH & FTP Brute-Force Attacks</h3>
+                <ul>
+                    <li>Simulated brute-force attacks using <strong>Hydra</strong> targeting:
+                        <ul>
+                            <li>OpenSSH service</li>
+                            <li>VSFTP server</li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/ssh.png" alt="SSH brute-force attack using Hydra" class="scan-image">
+                    <p class="scan-caption">SSH brute-force attack using Hydra</p>
+                </div>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/ftp.png" alt="FTP brute-force attack using Hydra" class="scan-image">
+                    <p class="scan-caption">FTP brute-force attack using Hydra</p>
+                </div>
+                <h3>2. Web Login Brute Force</h3>
+                <p>Simulated brute-force attacks using Hydra targeting Web Login page</p>
+                <ul>
+                    <li>Used a <strong>custom Flask web login form</strong> to capture POST login attempts</li>
+                </ul>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/Web_login.png" alt="Web Login brute-force attack using Hydra" class="scan-image">
+                    <p class="scan-caption">Web Login brute-force attack using Hydra</p>
+                </div>
+                <h3>3. Web Directory Enumeration</h3>
+                <ul>
+                    <li>Performed directory enumeration using Gobuster on exposed HTTP server</li>
+                </ul>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/web_enum.png" alt="Web directory enumeration using Gobuster" class="scan-image">
+                    <p class="scan-caption">Web directory enumeration using Gobuster</p>
+                </div>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/enum_log.png" alt="Image showing Web enumeration logs in Splunk" class="scan-image">
+                    <p class="scan-caption">Image showing Web enumeration logs in Splunk</p>
+                </div>
+            </section>
+
+            <section class="alerts">
+                <h2>Alerts and Detection in Splunk</h2>
+                <p>Created <strong>custom Splunk alerts</strong> to detect:</p>
+                <ul>
+                    <li>Multiple failed login attempts from the same IP (SSH, FTP, Web)
+                        <div class="honeypot-scan">
+                            <img src="../assets/images/FTP_login.png" alt="Multiple failed FTP login attempts alert in Splunk" class="scan-image">
+                            <p class="scan-caption">Multiple failed FTP login attempts from same IP in Splunk</p>
+                        </div>
+                    </li>
+                    <li>Configured SSH,FTP,Web server alerts to detect brute force attacks</li>
+                </ul>
+                <div class="alert-flex-row">
+                    <div class="honeypot-scan">
+                        <img src="../assets/images/ssh_alert.png" alt="SSH brute-force alert in Splunk" class="scan-image" style="max-width:400px;">
+                        <p class="scan-caption">SSH brute-force alert in Splunk</p>
+                    </div>
+                    <div class="honeypot-scan">
+                        <img src="../assets/images/weblogin_alert.png" alt="Web login brute-force alert in Splunk" class="scan-image" style="max-width:400px;">
+                        <p class="scan-caption">Web login brute-force alert in Splunk</p>
+                    </div>
+                </div>
+                <h2>Triggered alerts</h2>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/triggered_alerts.png" alt="Triggered Splunk alerts dashboard" class="scan-image">
+                    <p class="scan-caption">Splunk dashboard showing triggered alerts</p>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <h2>Visualization and Dashboards</h2>
+                <p>Dashboards in Splunk provided real-time insights into attacker behavior:</p>
+                <ul>
+                    <li>🔍 Top attacking IP addresses</li>
+                    <li>👤 Most used Passwords</li>
+                </ul>
+                <p>Dashboards were built using Splunk's search queries and visual panels like bar charts, pie charts.</p>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/top_ip.png" alt="Top attacking IP addresses dashboard" class="scan-image">
+                    <p class="scan-caption">Splunk dashboard showing top attacking IP addresses</p>
+                </div>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/most_passwords.png" alt="Most used passwords dashboard" class="scan-image">
+                    <p class="scan-caption">Splunk dashboard showing most used passwords</p>
+                </div>
+            </section>
+
+            <section class="results">
+                <h2>Results</h2>
+                <ul>
+                    <li>Detected brute-force and enumeration attacks in near real-time</li>
+                    <li>All simulated attacks were logged with metadata: IP, action, user, timestamp</li>
+                    <li>Alerts and dashboards gave clear visibility into attacker tactics</li>
+                </ul>
+            </section>
+
+            <section class="conclusion">
+                <h2>Conclusion</h2>
+                <p>This project enhanced my skills in:</p>
+                <ul>
+                    <li>Deploying and configuring a SIEM (Splunk)</li>
+                    <li>Simulating and analyzing attacker behavior</li>
+                    <li>Writing regex for field extraction and configuring Splunk's ingestion pipeline</li>
+                    <li>Creating visualizations and alerts for real-time detection</li>
+                </ul>
+                <p>It showcases how Splunk can be used effectively for threat detection and log correlation in a realistic cyber defense setup.</p>
+            </section>
+        </div>
+    </main>
+
+    <script src="../script.js"></script>
+</body>
+</html> 
