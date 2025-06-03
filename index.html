@@ -253,6 +253,69 @@
                 margin-bottom: 1rem;
             }
         }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .profile-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .profile-picture {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid rgba(0, 229, 255, 0.3);
+            object-fit: cover;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+            margin-right: 1.5rem;
+        }
+
+        .name-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .role-text {
+            font-size: 1.3rem;
+            color: #00e5ff;
+            margin-bottom: 1rem;
+        }
+
+        .glitch-text {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: #a8b2d1;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .role-text {
+                font-size: 1.1rem;
+            }
+            .glitch-text {
+                font-size: 2.2rem;
+            }
+            .subtitle {
+                font-size: 1.2rem;
+            }
+        }
     </style>
 </head>
 <body class="loading">
@@ -324,7 +387,6 @@
     <main>
         <!-- Profile Section -->
         <section id="home" class="profile-section fade-in">
-            <div class="photo-space"></div>
             <div class="profile-content">
                 <p class="role-text">Hi, my name is</p>
                 <h1 class="glitch-text" data-text="Karuturi Prasanth Chowdary">Karuturi Prasanth Chowdary</h1>
@@ -387,7 +449,7 @@
                         <h3>Tools & Technologies</h3>
                     </div>
                     <div class="skill-text">
-                        Kali Linux, Metasploit, Wireshark, Burp Suite, Nmap, Splunk, Metasploit, Autopsy, Volatility, Snort, Suricata, Sysinternal Toolkit and more.
+                        Elk stack, Splunk, Snort, Suricata, Wazuh, Burp Suite, Wireshark, Metasploit, Autopsy, Volatility, KAPE, Registry Explorer, Event viewer.
                     </div>
                 </div>
             </div>
@@ -484,6 +546,21 @@
                         <p>An interactive IPv4 subnet calculator that helps users quickly determine subnet details such as network and broadcast addresses, usable host ranges, and more. Supports both CIDR and traditional subnet mask formats, with real-time binary visualization for better understanding of IP addressing.</p>
                         <div class="project-corner-link-wrapper">
                             <a href="docs/subnet-calculator.html" class="project-corner-link">
+                                <i class="fas fa-external-link-alt"></i>
+                                View Project
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-content">
+                        <div class="project-header">
+                            <i class="fas fa-shield-alt"></i>
+                            <h3>Real-Time Threat Detection and Analysis Using Splunk SIEM</h3>
+                        </div>
+                        <p>Implemented a centralized threat detection and monitoring solution using Splunk. The system was designed to ingest, parse, and visualize various log sources including SSH, FTP, and web login attempts, simulating real-world attacker behavior using tools like Hydra and Gobuster from a Kali Linux machine.</p>
+                        <div class="project-corner-link-wrapper">
+                            <a href="docs/Splunk2.html" class="project-corner-link">
                                 <i class="fas fa-external-link-alt"></i>
                                 View Project
                             </a>
