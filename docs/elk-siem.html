@@ -196,6 +196,61 @@
             }
         }
 
+        /* Modal styles for image popup */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 90%;
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #00e5ff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .clickable-image {
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .clickable-image:hover {
+            transform: scale(1.02);
+        }
+
         .honeypot-scan {
             border-radius: 8px;
             padding: 1.5rem;
@@ -288,7 +343,7 @@
                 </div>
 
                 <div class="honeypot-scan">
-                    <img src="../assets/images/elk.png" alt="ELK Stack architecture and components" class="scan-image">
+                    <img src="../assets/images/elk.png" alt="ELK Stack architecture and components" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
                     <p class="scan-caption">ELK Stack deployment on Ubuntu VM</p>
                 </div>
 
@@ -303,7 +358,7 @@
                 </div>
 
                 <div class="honeypot-scan">
-                    <img src="../assets/images/nmap-scan.jpg" alt="Nmap scan showing open ports on honeypot" class="scan-image">
+                    <img src="../assets/images/nmap-scan.jpg" alt="Nmap scan showing open ports on honeypot" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
                     <p class="scan-caption">Nmap scan results showing honeypot's open ports (SSH, HTTP)</p>
                 </div>
 
@@ -315,7 +370,7 @@
                 </div>
 
                 <div class="honeypot-scan">
-                    <img src="../assets/images/filebeat-config.png" alt="Filebeat configuration showing log inputs" class="scan-image">
+                    <img src="../assets/images/filebeat-config.png" alt="Filebeat configuration showing log inputs" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
                     <p class="scan-caption">Filebeat configuration showing log collection from Cowrie honeypot and fake login page</p>
                 </div>
             </section>
@@ -334,8 +389,8 @@
                 </div>
 
                 <div class="honeypot-scan">
-                    <img src="../assets/images/brute-force.png" alt="Brute force attack simulation using Hydra" class="scan-image">
-                    <p class="scan-caption">Hydra tool performing brute-force attack against the honeypot services</p>
+                    <img src="../assets/images/brute-force.png" alt="Brute force attack simulation using Hydra" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
+                    <p class="scan-caption">Brute force attack simulation using Hydra against SSH honeypot</p>
                 </div>
 
                 <div class="detection-section">
@@ -350,13 +405,13 @@
                 </div>
 
                 <div class="honeypot-scan">
-                    <img src="../assets/images/log-1.png" alt="SIEM alert logs showing SSH brute force attempts" class="scan-image">
-                    <p class="scan-caption">SIEM alerts showing SSH brute-force attempts detected from multiple source IPs</p>
+                    <img src="../assets/images/log-1.png" alt="SIEM alert logs showing SSH brute force attempts" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
+                    <p class="scan-caption">SIEM alert logs showing SSH brute force attempts</p>
                 </div>
 
                 <div class="honeypot-scan">
-                    <img src="../assets/images/log-2.png" alt="SIEM alerts showing web login brute force attempts" class="scan-image">
-                    <p class="scan-caption">SIEM alerts showing brute-force attempts detected on the web login page</p>
+                    <img src="../assets/images/log-2.png" alt="SIEM alerts showing web login brute force attempts" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
+                    <p class="scan-caption">SIEM alerts showing web login brute force attempts</p>
                 </div>
             </section>
 
@@ -373,13 +428,13 @@
             </section>
 
             <div class="honeypot-scan">
-                <img src="../assets/images/dashboard.png" alt="Kibana dashboard showing username and password patterns" class="scan-image">
-                <p class="scan-caption">Kibana dashboard displaying most commonly used usernames and passwords in brute-force attempts</p>
+                <img src="../assets/images/dashboard.png" alt="Kibana dashboard showing username and password patterns" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
+                <p class="scan-caption">Kibana dashboard showing username and password patterns</p>
             </div>
 
             <div class="honeypot-scan">
-                <img src="../assets/images/ip.png" alt="Top attacking IP addresses visualization" class="scan-image">
-                <p class="scan-caption">Visualization of top attacking IP addresses</p>
+                <img src="../assets/images/ip.png" alt="Top attacking IP addresses visualization" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
+                <p class="scan-caption">Top attacking IP addresses visualization</p>
             </div>
 
             <section class="results">
@@ -416,6 +471,42 @@
         </div>
     </main>
 
+    <!-- Modal for image popup -->
+    <div id="imageModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
     <script src="../script.js"></script>
+    
+    <script>
+        // Modal functionality for image popup
+        function openModal(src, alt) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.style.display = "block";
+            modalImg.src = src;
+            modalImg.alt = alt;
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').style.display = "none";
+        }
+
+        // Close modal when clicking outside the image
+        window.onclick = function(event) {
+            const modal = document.getElementById('imageModal');
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
 </body>
 </html> 
