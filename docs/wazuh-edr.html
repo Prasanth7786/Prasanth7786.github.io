@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wazuh EDR Threat Detection and Attack Simulation Using Atomic Red Team</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        html {
+            height: 100%;
+            overflow-y: scroll;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+            background: #070b12;
+            color: #e5e7eb;
+            position: relative;
+        }
+
+        .particles-background, .cyber-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .documentation-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            min-height: calc(100vh - 4rem);
+        }
+
+        .documentation-container {
+            background: rgba(13, 17, 23, 0.95);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            overflow-y: auto;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 6px;
+            color: #00e5ff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .back-button:hover {
+            background: rgba(0, 229, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 229, 255, 0.1);
+        }
+
+        .back-button i {
+            font-size: 1.2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #fff;
+            border-bottom: 2px solid rgba(0, 229, 255, 0.2);
+            padding-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #00e5ff;
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: #40e9ff;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        ul li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #00e5ff;
+        }
+
+        ul ul {
+            margin-top: 0.5rem;
+            margin-left: 1rem;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tool-category {
+            background: rgba(13, 17, 23, 0.7);
+            border: 1px solid rgba(0, 229, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 8px;
+            padding: 1rem 1rem;
+            overflow-x: auto;
+            margin: 1rem 0 1.5rem;
+        }
+
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Source Code Pro', monospace;
+            color: #c9d1d9;
+            font-size: 0.95rem;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: rgba(0, 229, 255, 0.2);
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .documentation-content {
+                padding: 1rem;
+            }
+
+            .documentation-container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            h3 {
+                font-size: 1.2rem;
+            }
+        }
+
+        .honeypot-scan {
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(0, 229, 255, 0.1);
+            background: rgba(13, 17, 23, 0.95);
+        }
+        
+        .scan-image {
+            max-width: 700px;
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .scan-caption {
+            color: #6b7280;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 1rem;
+            margin-bottom: 0;
+            font-family: 'Source Code Pro', monospace;
+        }
+
+        .alert-flex-row {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+        .alert-flex-row .honeypot-scan {
+            flex: 1 1 320px;
+            max-width: 400px;
+            min-width: 260px;
+            margin: 0;
+        }
+        @media (max-width: 900px) {
+            .alert-flex-row {
+                flex-direction: column;
+                gap: 1.5rem;
+                align-items: center;
+            }
+        }
+
+        /* Modal styles for image popup */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 90%;
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #00e5ff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .clickable-image {
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .clickable-image:hover {
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body class="loaded">
+    <div class="particles-background"></div>
+    <div class="cyber-grid"></div>
+
+    <main class="documentation-content">
+        <a href="../index.html#projects" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+            Back to Portfolio
+        </a>
+
+        <div class="documentation-container">
+            <h1><i class="fas fa-shield-alt"></i> Wazuh EDR Threat Detection and Attack Simulation Using Atomic Red Team</h1>
+
+            <section class="project-overview">
+                <h2>Project Overview</h2>
+                <p>In this project, I deployed a comprehensive <strong>Endpoint Detection and Response (EDR)</strong> solution using <strong>Wazuh</strong> to monitor and detect cyber attacks in real time. To simulate adversary techniques, I leveraged the <strong>Atomic Red Team (ART)</strong> framework, which provides MITRE ATT&amp;CK–mapped tests for emulating various attack scenarios.</p>
+                <p>I installed and configured a Wazuh Manager VM and deployed the Wazuh agent on a Windows VM. <strong>Sysmon</strong> was configured on the Windows endpoint to capture detailed system activity, which the Wazuh agent then forwarded to the manager. I used ART to simulate attacks, and all events were collected, analyzed, and visualized in Wazuh for detection and alerting.</p>
+            </section>
+
+            <section class="objectives">
+                <h2>Project Objectives</h2>
+                <ul>
+                    <li>Deploy Wazuh EDR solution (Manager + Agent) for threat monitoring and detection</li>
+                    <li>Configure Sysmon to collect detailed Windows event logs</li>
+                    <li>Collect and forward Sysmon logs via Wazuh Agent</li>
+                    <li>Configure custom detection rules to raise alerts on critical techniques</li>
+                    <li>Simulate MITRE ATT&CK techniques using Atomic Red Team</li>
+                    <li>Detect, analyze, and visualize attack events in Wazuh</li>
+                </ul>
+            </section>
+
+            <section class="tools">
+                <h2>Tools and Technologies Used</h2>
+                <ul>
+                    <li><strong>Wazuh Manager</strong> (Ubuntu VM)</li>
+                    <li><strong>Wazuh Agent</strong> (Windows VM)</li>
+                    <li><strong>Sysmon</strong> (Windows System Monitor)</li>
+                    <li><code>ossec.conf</code> configuration for event collection</li>
+                    <li><strong>Atomic Red Team</strong> (PowerShell-based test framework)</li>
+                    <li><strong>PowerShell</strong> for installation, configuration, and attack execution</li>
+                </ul>
+            </section>
+
+            <section class="setup">
+                <h2>System Setup</h2>
+
+                <h3>1. Wazuh Deployment</h3>
+                <ul>
+                    <li>Installed and configured Wazuh Manager on an Ubuntu VM</li>
+                </ul>
+                <div class="alert-flex-row">
+                    <div class="honeypot-scan">
+                        <img src="../assets/wazuh_1.png" alt="Wazuh Manager Installation" class="scan-image clickable-image" style="max-width:400px;" onclick="openModal(this.src, this.alt)">
+                        <p class="scan-caption">Wazuh Manager installation and configuration on Ubuntu VM</p>
+                    </div>
+                    <div class="honeypot-scan">
+                        <img src="../assets/wazuh-2.png" alt="Wazuh Manager Configuration" class="scan-image clickable-image" style="max-width:400px;" onclick="openModal(this.src, this.alt)">
+                        <p class="scan-caption">Wazuh Dashboard</p>
+                    </div>
+                </div>
+                <ul>
+                    <li>Deployed the Wazuh agent on a Windows VM to monitor endpoint activity</li>
+                </ul>
+                <div class="honeypot-scan">
+                    <img src="../assets/wazuh_3.png" alt="Wazuh Agent Deployment" class="scan-image clickable-image" style="max-width:400px;" onclick="openModal(this.src, this.alt)">
+                    <p class="scan-caption">Wazuh Agent deployment and configuration on Windows VM</p>
+                </div>
+                <ul>
+                    <li>Verified connectivity and ensured the agent was sending logs to the manager</li>
+                </ul>
+                <div class="honeypot-scan">
+                    <img src="../assets/wazuh_4.png" alt="Wazuh Agent Connectivity Verification" class="scan-image clickable-image" style="max-width:400px;" onclick="openModal(this.src, this.alt)">
+                    <p class="scan-caption">Verification of Wazuh Agent connectivity and log forwarding to Manager</p>
+                </div>
+
+                <h3>2. Sysmon Installation and Configuration</h3>
+                <ul>
+                    <li><strong>Downloaded Sysmon configuration file:</strong>
+                        <div class="code-block"><pre><code>Invoke-WebRequest -Uri https://wazuh.com/resources/blog/emulation-of-attack-techniques-and-detection-with-wazuh/sysmonconfig.xml -OutFile sysmonconfig.xml</code></pre></div>
+                    </li>
+                    <li><strong>Installed Sysmon with configuration:</strong>
+                        <div class="code-block"><pre><code>Sysmon64.exe -accepteula -i sysmonconfig.xml</code></pre></div>
+                    </li>
+                    <li><strong>Configured Wazuh Agent to collect Sysmon events:</strong>
+                        <div class="code-block"><pre><code>&lt;localfile&gt;
+  &lt;location&gt;Microsoft-Windows-Sysmon/Operational&lt;/location&gt;
+  &lt;log_format&gt;eventchannel&lt;/log_format&gt;
+&lt;/localfile&gt;</code></pre></div>
+                    </li>
+                    <li><strong>Restarted the Wazuh agent to apply changes:</strong>
+                        <div class="code-block"><pre><code>Restart-Service -Name wazuh</code></pre></div>
+                    </li>
+                </ul>
+
+                <h3>3. Custom Detection Rules in Wazuh</h3>
+                <p>To enhance threat detection, custom rules were configured on the Wazuh Manager. These rules raise alerts when specific MITRE ATT&amp;CK techniques are detected via Sysmon logs.</p>
+                <p><strong>Modified <code>local_rules.xml</code> file:</strong></p>
+                <div class="code-block"><pre><code>&lt;group name="windows,sysmon,"&gt;
+
+  &lt;rule id="115001" level="10"&gt;
+    &lt;if_group&gt;windows&lt;/if_group&gt;
+    &lt;field name="win.eventdata.ruleName" type="pcre2"&gt;technique_id=T1053,technique_name=Scheduled Task&lt;/field&gt;
+    &lt;description&gt;A Newly Scheduled Task has been Detected on $(win.system.computer)&lt;/description&gt;
+    &lt;mitre&gt;
+      &lt;id&gt;T1053&lt;/id&gt;
+    &lt;/mitre&gt;
+  &lt;/rule&gt;
+
+  &lt;rule id="115004" level="10"&gt;
+    &lt;if_group&gt;windows&lt;/if_group&gt;
+    &lt;field name="win.eventdata.ruleName" type="pcre2"&gt;technique_id=T1518.001,technique_name=Security Software Discovery&lt;/field&gt;
+    &lt;description&gt;Security Software Discovery Attempt has been Detected on $(win.system.computer)&lt;/description&gt;
+    &lt;mitre&gt;
+      &lt;id&gt;T1518&lt;/id&gt;
+    &lt;/mitre&gt;
+  &lt;/rule&gt;
+
+  &lt;rule id="115005" level="10"&gt;
+    &lt;if_group&gt;windows&lt;/if_group&gt;
+    &lt;field name="win.eventdata.ruleName" type="pcre2"&gt;technique_id=T1548.002,technique_name=Bypass User Access Control&lt;/field&gt;
+    &lt;description&gt;Privilege Escalation Through Bypass of UAC has been Detected on $(win.system.computer)&lt;/description&gt;
+    &lt;mitre&gt;
+      &lt;id&gt;T1548.002&lt;/id&gt;
+      &lt;id&gt;T1088&lt;/id&gt;
+    &lt;/mitre&gt;
+  &lt;/rule&gt;
+
+  &lt;rule id="115010" level="10"&gt;
+    &lt;if_group&gt;windows&lt;/if_group&gt;
+    &lt;field name="win.eventdata.ruleName" type="pcre2"&gt;technique_id=T1003.001,technique_name=LSASS Memory Access&lt;/field&gt;
+    &lt;description&gt;Credential Dumping (LSASS) Detected on $(win.system.computer)&lt;/description&gt;
+    &lt;mitre&gt;
+      &lt;id&gt;T1003&lt;/id&gt;
+    &lt;/mitre&gt;
+  &lt;/rule&gt;
+
+&lt;/group&gt;</code></pre></div>
+                <p><strong>Restarted Wazuh Manager to apply changes:</strong></p>
+                <div class="code-block"><pre><code>sudo systemctl restart wazuh-manager</code></pre></div>
+
+                <h3>4. Atomic Red Team installation</h3>
+                <ul>
+                    <li><strong>Installed Atomic Red Team framework in PowerShell:</strong>
+                        <div class="code-block"><pre><code>IEX (IWR 'https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/install-atomicredteam.ps1' -UseBasicParsing);
+Install-AtomicRedTeam -getAtomics</code></pre></div>
+                    </li>
+                    <li><strong>Imported the ART module:</strong>
+                        <div class="code-block"><pre><code>Import-Module "C:\AtomicRedTeam\invoke-atomicredteam\Invoke-AtomicRedTeam.psd1"</code></pre></div>
+                    </li>
+                </ul>
+
+            </section>
+
+            <section class="attack-simulation">
+                <h2>Simulated common MITRE ATT&CK techniques using Atomic Red Team:</h2>
+
+                <h3>1. Scheduled Task / Job — Persistence:</h3>
+                <p>This test simulates the creation of a scheduled task to maintain persistence on the target system</p>
+                <div class="code-block"><pre><code>Invoke-AtomicTest T1053.005</code></pre></div>
+                <div class="alert-flex-row">
+                    <div class="honeypot-scan">
+                        <img src="../assets/images/T1053.1.png" alt="T1053.1 Scheduled Task Test Results" class="scan-image clickable-image" style="max-width:400px;" onclick="openModal(this.src, this.alt)">
+                        <p class="scan-caption">Steps executed by Atomic Red Team test T1053.005</p>
+                    </div>
+                </div>
+                <p>Detected creation of a scheduled task on the endpoint, indicating persistence activity</p>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/T1053.3.png" alt="T1053.3 Scheduled Task Test Results" class="scan-image clickable-image" style="max-width:400px;" onclick="openModal(this.src, this.alt)">
+                    <p class="scan-caption">Security Alerts of T1053 scheduled task persistence test execution</p>
+                </div>
+
+                <h3>2. UAC Bypass — Privilege Escalation:</h3>
+                <p>This test simulates bypassing User Account Control (UAC) to escalate privileges.</p>
+                <div class="code-block"><pre><code>Invoke-AtomicTest T1548.002</code></pre></div>
+                <div class="alert-flex-row">
+                    <div class="honeypot-scan">
+                        <img src="../assets/images/T1548.1.png" alt="T1548.1 UAC Bypass Test Results" class="scan-image clickable-image" style="max-width:400px;" onclick="openModal(this.src, this.alt)">
+                        <p class="scan-caption">Steps executed by Atomic Red Team test T1548.002</p>
+                    </div>
+                </div>
+                <p>Detected attempt to bypass User Account Control, indicating privilege escalation.</p>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/T1548.3.png" alt="T1548.3 UAC Bypass Test Results" class="scan-image clickable-image" style="max-width:400px;" onclick="openModal(this.src, this.alt)">
+                    <p class="scan-caption">Security Alerts of T1548 UAC bypass privilege escalation test</p>
+                </div>
+
+                <h3>3. Security Software Discovery — Reconnaissance:</h3>
+                <p>This test simulates an attacker attempting to discover installed security software.</p>
+                <div class="code-block"><pre><code>Invoke-AtomicTest T1518.001</code></pre></div>
+                <div class="alert-flex-row">
+                    <div class="honeypot-scan">
+                        <img src="../assets/images/T1518.1.png" alt="T1518.1 Security Software Discovery Test Results" class="scan-image clickable-image" style="max-width:400px;" onclick="openModal(this.src, this.alt)">
+                        <p class="scan-caption">Steps executed by Atomic Red Team test T1518.001</p>
+                    </div>
+                </div>
+                <p>Detected enumeration of security software on the endpoint, indicating reconnaissance activity.</p>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/T1518.3.png" alt="T1518.3 Security Software Discovery Test Results" class="scan-image clickable-image" style="max-width:400px;" onclick="openModal(this.src, this.alt)">
+                    <p class="scan-caption">Security Alerts of T1518 security software discovery test</p>
+                </div>
+
+                <h3>4. Credential Dumping (LSASS):</h3>
+                <p>This test simulates the dumping of credentials from LSASS memory.</p>
+                <div class="code-block"><pre><code>Invoke-AtomicTest T1003.001</code></pre></div>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/T1003.1.png" alt="T1003.1 Credential Dumping Test Results" class="scan-image clickable-image" style="max-width:400px;" onclick="openModal(this.src, this.alt)">
+                    <p class="scan-caption">Steps executed by Atomic Red Team test T1003.001</p>
+                </div>
+                <p>Detected LSASS memory access for credential dumping, indicating sensitive data exfiltration attempts</p>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/T1003.2.png" alt="T1003.2 Credential Dumping Test Results" class="scan-image clickable-image" style="max-width:400px;" onclick="openModal(this.src, this.alt)">
+                    <p class="scan-caption">Security Alerts of T1003 credential dumping (LSASS) test execution</p>
+                </div>
+                <p>All attack logs, including technique ID, name, source process, user account, and timestamp, were captured by Sysmon and forwarded via Wazuh Agent to the manager for detection and alerting.</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Visualization and Dashboards</h2>
+                <p>Used the Wazuh web interface to visualize alerts generated by custom rules and Atomic Red Team simulations.</p>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/Visual.png" alt="Wazuh Web Interface Dashboard" class="scan-image clickable-image" style="max-width:400px;" onclick="openModal(this.src, this.alt)">
+                    <p class="scan-caption">Wazuh web interface showing alerts and dashboard visualizations</p>
+                </div>
+                <p><strong>Dashboards highlighted:</strong></p>
+                <ul>
+                    <li><strong>Top Agents</strong> – endpoints generating the most alerts.</li>
+                    <li><strong>Top MITRE ATT&CK Techniques</strong> – most frequently detected attack techniques.</li>
+                    <li><strong>Alert Severity and Frequency</strong> – number of alerts by level and over time.</li>
+                </ul>
+            </section>
+
+            <section class="results">
+                <h2>Results</h2>
+                <ul>
+                    <li>Wazuh successfully detected simulated attacks triggered via Atomic Red Team</li>
+                    <li>Custom rules provided accurate, high-severity alerts for critical techniques</li>
+                    <li>Sysmon ensured granular visibility into Windows endpoint events</li>
+                    <li>Dashboards enabled real-time monitoring and tracking of attack trends</li>
+                </ul>
+            </section>
+
+            <section class="conclusion">
+                <h2>Conclusion</h2>
+                <ul>
+                    <li>Deploying and managing Wazuh EDR (Manager + Agent)</li>
+                    <li>Installing and configuring Sysmon for detailed endpoint logging</li>
+                    <li>Using Atomic Red Team to simulate MITRE ATT&amp;CK techniques</li>
+                    <li>Writing and deploying custom detection rules in Wazuh</li>
+                    <li>Visualizing and analyzing endpoint events for effective threat detection</li>
+                </ul>
+                <p>It demonstrated the effectiveness of Wazuh as an open-source EDR solution for monitoring, detecting, and responding to cyber threats in enterprise environments.</p>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modal for image popup -->
+    <div id="imageModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <script src="../script.js"></script>
+    
+    <script>
+        // Modal functionality for image popup
+        function openModal(src, alt) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.style.display = "block";
+            modalImg.src = src;
+            modalImg.alt = alt;
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').style.display = "none";
+        }
+
+        // Close modal when clicking outside the image
+        window.onclick = function(event) {
+            const modal = document.getElementById('imageModal');
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html> 
