@@ -241,6 +241,61 @@
                 align-items: center;
             }
         }
+
+        /* Modal styles for image popup */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 90%;
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #00e5ff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .clickable-image {
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .clickable-image:hover {
+            transform: scale(1.02);
+        }
     </style>
 </head>
 <body class="loaded">
@@ -293,21 +348,21 @@
                     <li>Installed Splunk on Ubuntu</li>
                 </ul>
                 <div class="honeypot-scan">
-                    <img src="../assets/images/Splunk_login.png.png" alt="Splunk Login Page" class="scan-image">
+                    <img src="../assets/images/Splunk_login.png.png" alt="Splunk Login Page" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
                     <p class="scan-caption">Splunk Enterprise login page after installation on Ubuntu</p>
                 </div>
                 <ul>
                     <li>Created index <code>linux_logs</code></li>
                 </ul>
                 <div class="honeypot-scan">
-                    <img src="../assets/images/Linux_logs.png" alt="Splunk linux_logs Index" class="scan-image" style="max-width:400px;">
+                    <img src="../assets/images/Linux_logs.png" alt="Splunk linux_logs Index" class="scan-image clickable-image" style="max-width:400px;" onclick="openModal(this.src, this.alt)">
                     <p class="scan-caption">linux_logs index created in Splunk for centralized log storage</p>
                 </div>
                 <h2>Log Source Ingestion</h2>
                 <h3>inputs.conf</h3>
                 <h4><span style="color:#00e5ff">&#8594;</span> Configured inputs.conf to ingest SSH, FTP, Web server logs</h4>
                 <div class="honeypot-scan">
-                    <img src="../assets/images/inputs.png" alt="inputs.conf Splunk configuration" class="scan-image">
+                    <img src="../assets/images/inputs.png" alt="inputs.conf Splunk configuration" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
                     <p class="scan-caption">inputs.conf configuration in Splunk for log ingestion</p>
                 </div>
             </section>
@@ -320,7 +375,7 @@
                     <li>Web logs in JSON format are automatically parsed using Splunk's JSON handling capabilities.</li>
                 </ul>
                 <div class="honeypot-scan">
-                    <img src="../assets/images/props.png" alt="props.conf Splunk configuration" class="scan-image">
+                    <img src="../assets/images/props.png" alt="props.conf Splunk configuration" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
                     <p class="scan-caption">props.conf configuration in Splunk for field extraction</p>
                 </div>
                 <h3><code>transforms.conf</code></h3>
@@ -328,7 +383,7 @@
                     <li>Extracts <code>action</code>, <code>user</code>, and <code>src_ip</code> fields from SSH logs.</li>
                 </ul>
                 <div class="honeypot-scan">
-                    <img src="../assets/images/transforms.png" alt="transforms.conf Splunk configuration" class="scan-image">
+                    <img src="../assets/images/transforms.png" alt="transforms.conf Splunk configuration" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
                     <p class="scan-caption">transforms.conf configuration in Splunk for SSH log field extraction</p>
                 </div>
                 <h3><code>fields.conf</code></h3>
@@ -336,7 +391,7 @@
                     <li>Ensures the extracted fields are indexed and available for efficient searching.</li>
                 </ul>
                 <div class="honeypot-scan">
-                    <img src="../assets/images/fields.png" alt="fields.conf Splunk configuration" class="scan-image">
+                    <img src="../assets/images/fields.png" alt="fields.conf Splunk configuration" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
                     <p class="scan-caption">fields.conf configuration in Splunk for indexing extracted fields</p>
                 </div>
             </section>
@@ -353,11 +408,11 @@
                     </li>
                 </ul>
                 <div class="honeypot-scan">
-                    <img src="../assets/images/ssh.png" alt="SSH brute-force attack using Hydra" class="scan-image">
+                    <img src="../assets/images/ssh.png" alt="SSH brute-force attack using Hydra" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
                     <p class="scan-caption">SSH brute-force attack using Hydra</p>
                 </div>
                 <div class="honeypot-scan">
-                    <img src="../assets/images/ftp.png" alt="FTP brute-force attack using Hydra" class="scan-image">
+                    <img src="../assets/images/ftp.png" alt="FTP brute-force attack using Hydra" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
                     <p class="scan-caption">FTP brute-force attack using Hydra</p>
                 </div>
                 <h3>2. Web Login Brute Force</h3>
@@ -366,7 +421,7 @@
                     <li>Used a <strong>custom Flask web login form</strong> to capture POST login attempts</li>
                 </ul>
                 <div class="honeypot-scan">
-                    <img src="../assets/images/Web_login.png" alt="Web Login brute-force attack using Hydra" class="scan-image">
+                    <img src="../assets/images/Web_login.png" alt="Web Login brute-force attack using Hydra" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
                     <p class="scan-caption">Web Login brute-force attack using Hydra</p>
                 </div>
                 <h3>3. Web Directory Enumeration</h3>
@@ -374,11 +429,11 @@
                     <li>Performed directory enumeration using Gobuster on exposed HTTP server</li>
                 </ul>
                 <div class="honeypot-scan">
-                    <img src="../assets/images/Web_enum.png" alt="Web directory enumeration using Gobuster" class="scan-image">
+                    <img src="../assets/images/Web_enum.png" alt="Web directory enumeration using Gobuster" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
                     <p class="scan-caption">Web directory enumeration using Gobuster</p>
                 </div>
                 <div class="honeypot-scan">
-                    <img src="../assets/images/enum_log.png" alt="Image showing Web enumeration logs in Splunk" class="scan-image">
+                    <img src="../assets/images/enum_log.png" alt="Image showing Web enumeration logs in Splunk" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
                     <p class="scan-caption">Image showing Web enumeration logs in Splunk</p>
                 </div>
             </section>
@@ -389,7 +444,7 @@
                 <ul>
                     <li>Multiple failed login attempts from the same IP (SSH, FTP, Web)
                         <div class="honeypot-scan">
-                            <img src="../assets/images/FTP_login.png" alt="Multiple failed FTP login attempts alert in Splunk" class="scan-image">
+                            <img src="../assets/images/FTP_login.png" alt="Multiple failed FTP login attempts alert in Splunk" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
                             <p class="scan-caption">Multiple failed FTP login attempts from same IP in Splunk</p>
                         </div>
                     </li>
@@ -397,17 +452,17 @@
                 </ul>
                 <div class="alert-flex-row">
                     <div class="honeypot-scan">
-                        <img src="../assets/images/ssh_alert.png" alt="SSH brute-force alert in Splunk" class="scan-image" style="max-width:400px;">
+                        <img src="../assets/images/ssh_alert.png" alt="SSH brute-force alert in Splunk" class="scan-image clickable-image" style="max-width:400px;" onclick="openModal(this.src, this.alt)">
                         <p class="scan-caption">SSH brute-force alert in Splunk</p>
                     </div>
                     <div class="honeypot-scan">
-                        <img src="../assets/images/weblogin_alert.png" alt="Web login brute-force alert in Splunk" class="scan-image" style="max-width:400px;">
+                        <img src="../assets/images/weblogin_alert.png" alt="Web login brute-force alert in Splunk" class="scan-image clickable-image" style="max-width:400px;" onclick="openModal(this.src, this.alt)">
                         <p class="scan-caption">Web login brute-force alert in Splunk</p>
                     </div>
                 </div>
                 <h2>Triggered alerts</h2>
                 <div class="honeypot-scan">
-                    <img src="../assets/images/Triggered_alerts.png" alt="Triggered Splunk alerts dashboard" class="scan-image">
+                    <img src="../assets/images/Triggered_alerts.png" alt="Triggered Splunk alerts dashboard" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
                     <p class="scan-caption">Splunk dashboard showing triggered alerts</p>
                 </div>
             </section>
@@ -421,11 +476,11 @@
                 </ul>
                 <p>Dashboards were built using Splunk's search queries and visual panels like bar charts, pie charts.</p>
                 <div class="honeypot-scan">
-                    <img src="../assets/images/top_ip.png" alt="Top attacking IP addresses dashboard" class="scan-image">
+                    <img src="../assets/images/top_ip.png" alt="Top attacking IP addresses dashboard" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
                     <p class="scan-caption">Splunk dashboard showing top attacking IP addresses</p>
                 </div>
                 <div class="honeypot-scan">
-                    <img src="../assets/images/Most_passwords.png" alt="Most used passwords dashboard" class="scan-image">
+                    <img src="../assets/images/Most_passwords.png" alt="Most used passwords dashboard" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
                     <p class="scan-caption">Splunk dashboard showing most used passwords</p>
                 </div>
             </section>
@@ -453,6 +508,42 @@
         </div>
     </main>
 
+    <!-- Modal for image popup -->
+    <div id="imageModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
     <script src="../script.js"></script>
+    
+    <script>
+        // Modal functionality for image popup
+        function openModal(src, alt) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.style.display = "block";
+            modalImg.src = src;
+            modalImg.alt = alt;
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').style.display = "none";
+        }
+
+        // Close modal when clicking outside the image
+        window.onclick = function(event) {
+            const modal = document.getElementById('imageModal');
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
 </body>
 </html> 
