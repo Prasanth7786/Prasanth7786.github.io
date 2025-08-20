@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Network Intrusion Detection Using Snort and Splunk</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        html { height: 100%; overflow-y: scroll; }
+        body { margin: 0; padding: 0; min-height: 100%; background: #070b12; color: #e5e7eb; position: relative; }
+        .particles-background, .cyber-grid { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        .documentation-content { position: relative; z-index: 1; max-width: 1200px; margin: 2rem auto; padding: 0 2rem; min-height: calc(100vh - 4rem); }
+        .documentation-container { background: rgba(13, 17, 23, 0.95); border-radius: 12px; border: 1px solid rgba(0, 229, 255, 0.2); padding: 2rem; margin-bottom: 2rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); backdrop-filter: blur(10px); overflow-y: auto; }
+        .back-button { display: inline-flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.5rem; background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 6px; color: #00e5ff; text-decoration: none; font-size: 1.1rem; font-weight: 500; transition: all 0.3s ease; margin-bottom: 2rem; }
+        .back-button:hover { background: rgba(0, 229, 255, 0.2); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 229, 255, 0.1); }
+        h1 { font-size: 2.2rem; margin-bottom: 2rem; color: #fff; border-bottom: 2px solid rgba(0, 229, 255, 0.2); padding-bottom: 1rem; }
+        h2 { font-size: 1.8rem; color: #00e5ff; margin-top: 2.5rem; margin-bottom: 1.5rem; }
+        h3 { font-size: 1.4rem; color: #40e9ff; margin-top: 2rem; margin-bottom: 1rem; }
+        p { line-height: 1.7; margin-bottom: 1.2rem; }
+        ul { list-style-type: none; padding-left: 0; }
+        ul li { margin-bottom: 1rem; padding-left: 1.5rem; position: relative; line-height: 1.6; }
+        ul li::before { content: "→"; position: absolute; left: 0; color: #00e5ff; }
+        ul ul { margin-top: 0.5rem; margin-left: 1rem; }
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+        .tool-category { background: rgba(13, 17, 23, 0.7); border: 1px solid rgba(0, 229, 255, 0.1); border-radius: 12px; padding: 1.5rem; }
+        .code-block { background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 8px; padding: 1rem 1rem; overflow-x: auto; margin: 1rem 0 1.5rem; }
+        pre { margin: 0; white-space: pre-wrap; word-wrap: break-word; font-family: 'Source Code Pro', monospace; color: #c9d1d9; font-size: 0.95rem; }
+        code { font-family: 'Source Code Pro', monospace; color: #c9d1d9; }
+        .section-divider { height: 1px; background: rgba(0, 229, 255, 0.2); margin: 2rem 0; }
+        .tech-badge { display: inline-block; padding: 0.5rem 1rem; background: rgba(0, 229, 255, 0.1); border-radius: 4px; margin: 0.25rem; font-family: 'Source Code Pro', monospace; color: #00e5ff; font-size: 0.9rem; backdrop-filter: blur(5px); }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9); backdrop-filter: blur(5px); }
+        .modal-content { margin: auto; display: block; width: 90%; max-width: 90%; max-height: 90%; object-fit: contain; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 8px; box-shadow: 0 0 20px rgba(0, 229, 255, 0.3); }
+        .close { position: absolute; top: 15px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 1001; }
+        .close:hover, .close:focus { color: #00e5ff; text-decoration: none; cursor: pointer; }
+        .clickable-image { cursor: pointer; transition: transform 0.2s ease; }
+        .clickable-image:hover { transform: scale(1.02); }
+        .honeypot-scan { border-radius: 8px; padding: 1.5rem; margin: 1rem 0 1.5rem; border: 1px solid rgba(0, 229, 255, 0.1); background: rgba(13, 17, 23, 0.95); }
+        .scan-image { max-width: 700px; width: 100%; height: auto; display: block; margin: 0 auto; }
+        .wide-image { max-width: 700px; }
+        .rules-image { max-width: 900px; }
+        .scan-caption { color: #6b7280; font-size: 0.9rem; text-align: center; margin-top: 1rem; margin-bottom: 0; font-family: 'Source Code Pro', monospace; }
+        @media (max-width: 768px) {
+            .documentation-content { padding: 1rem; }
+            .documentation-container { padding: 1.5rem; }
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.5rem; }
+            h3 { font-size: 1.2rem; }
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){ document.body.classList.add('loaded'); });
+    </script>
+</head>
+<body class="loaded">
+    <div class="particles-background"></div>
+    <div class="cyber-grid"></div>
+
+    <main class="documentation-content">
+        <a href="../index.html#projects" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+            Back to Portfolio
+        </a>
+
+        <div class="documentation-container">
+            <h1><i class="fas fa-bug"></i> Real-Time Network Intrusion Detection Using Snort and Splunk</h1>
+
+            <section>
+                <h2>Project Overview</h2>
+                <p>In this project, I deployed and configured Snort IDS on an Ubuntu virtual machine to monitor and detect network intrusions in real time. I created and tested multiple custom Snort rules to identify common attack patterns, including Nmap scans, brute-force attempts, reverse shells, and ICMP floods.</p>
+
+                <p>To enhance visibility and centralized monitoring, I integrated Snort with existing Splunk Setup, forwarding Snort alerts for real-time analysis and visualization. The project successfully demonstrated how open-source IDS and SIEM tools can be combined to detect and investigate malicious activity.</p>
+            </section>
+
+            <section>
+                <h2>Project Objectives</h2>
+                <ul>
+                    <li>Deploy Snort IDS on Ubuntu VM for intrusion detection.</li>
+                    <li>Configure custom Snort rules to detect specific attack types.</li>
+                    <li>Simulate real-world attacks using Kali Linux.</li>
+                    <li>Forward Snort alerts to Splunk for centralized monitoring.</li>
+                    <li>Visualize attacker behavior and validate detection through Splunk dashboards.</li>
+                </ul>
+            </section>
+
+            <section class="tools">
+                <h2>Tools and Technologies Used</h2>
+                <ul>
+                    <li>Snort IDS (Ubuntu VM)</li>
+                    <li>Splunk Enterprise (SIEM platform)</li>
+                    <li>Kali Linux (attack simulation)</li>
+                    <li>Nmap (port scanning)</li>
+                    <li>Hydra (SSH brute-force)</li>
+                    <li>hping3 (ICMP flood)</li>
+                    <li>Netcat (reverse shell)</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>System Setup</h2>
+                <h3>1. Snort Installation and Configuration</h3>
+                <ul>
+                    <li><strong> I Installed Snort on Ubuntu VM using the following commands</strong>:</li>
+                </ul>
+                <div class="code-block"><pre><code>sudo apt update && sudo apt upgrade -y
+sudo apt install snort -y</code></pre></div>
+                <ul>
+                    <li> I Configured Snort to monitor my home network IP range.</li>
+                </ul>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/snort_IP.png" alt="Snort HOME_NET configuration and monitored network IPs" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
+                    <p class="scan-caption">Configured HOME_NET to monitor my home network IP range</p>
+                </div>
+
+                <h3>2. Custom Detection Rules</h3>
+                <p>I created custom rules in the Snort local rules file to detect malicious activity.</p>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/snort_rules.png" alt="Custom Snort rules configured to detect scans, brute-force, reverse shells, and ICMP floods" class="scan-image rules-image clickable-image" onclick="openModal(this.src, this.alt)">
+                    <p class="scan-caption">Custom Snort rules used for detecting attack scenarios</p>
+                </div>
+                
+            
+                <h3>3. Running Snort in IDS Mode</h3>
+                <ul>
+                    <li>I executed Snort in alert mode to capture malicious traffic in real time:</li>
+                </ul>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/snort_start.png" alt="Snort started in alert mode" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
+                    <p class="scan-caption">Snort running in IDS alert mode</p>
+                </div>
+                <ul>
+                    <li>Snort stored alerts in:</li>
+                </ul>
+                <div class="code-block"><pre><code>/var/log/snort/alert_fast.log</code></pre></div>
+            </section>
+
+            <section>
+                <h2>Attack Simulation</h2>
+                <h3>1. Nmap SYN Scan — Reconnaissance</h3>
+                <p>I performed a SYN scan using Nmap from Kali Linux to detect open ports and services on the target system</p>
+                
+                <div class="honeypot-scan">
+                    <img src="../assets/images/snort_nmap.png" alt="Snort alert for Nmap SYN scan detection" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
+                    <p class="scan-caption">Nmap Scanning on Kali Linux</p>
+                </div>
+
+                <h3>2. SSH Brute-force — Credential Access</h3>
+                <p>I used Hydra to brute-force SSH credentials of the target system</p>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/snort_hydra.png" alt="Snort alert for SSH brute-force attempts (Hydra)" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
+                    <p class="scan-caption">SSH Brute-force attack on Kali Linux</p>
+                </div>
+
+                <h3>3. ICMP Flood — Denial of Service</h3>
+                <p>I launched an ICMP flood attack using hping3 to overwhelm the target system's network resources</p>    
+                <div class="honeypot-scan">
+                    <img src="../assets/images/snort_icmp.png" alt="Snort alert for ICMP flood (hping3)" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
+                    <p class="scan-caption">ICMP Flood attack on Kali Linux</p>
+                </div>
+
+                <h3>4. Reverse Shell — Command &amp; Control</h3>
+                <p>I used Netcat to establish a reverse shell connection to the target system to gain remote access </p>
+                
+                <div class="honeypot-scan">
+                    <img src="../assets/images/snort_rev%20shell.png" alt="Snort alert for reverse shell connection" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
+                    <p class="scan-caption">Reverse Shell on Kali Linux</p>
+                </div>
+                <p>Snort Successfully Detected all attacks in real time</p>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/snort_alert.png" alt="Snort alert view confirming detections" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
+                    
+                </div>
+            </section>
+
+            <section>
+                <h2>Splunk Integration</h2>
+                <h3>1. Configuration</h3>
+                <p>I integrated Snort into the existing Splunk setup by configuring it to monitor Snort alert logs. This was done by adding the following entry in inputs.conf:</p>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/snort_config.png" alt="Splunk configuration for monitoring Snort alert log" class="scan-image wide-image clickable-image" onclick="openModal(this.src, this.alt)">
+                    <p class="scan-caption">Splunk inputs configuration to monitor Snort alert log</p>
+                </div>
+                <p>This allowed the existing Splunk instance to collect and index Snort alerts in real time alongside other log sources.</p>
+
+                <h3>2. Monitoring Alerts in Splunk</h3>
+                <ul>
+                    <li>I forwarded Snort alerts into Splunk, which allowed me to monitor and visualize detections in real time:</li>
+                </ul>
+                <h4>Nmap Scan Detection – Reconnaissance alerts displayed in Splunk</h4>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/splunk_nmap.png" alt="Splunk view showing Nmap scan detection" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
+                    <p class="scan-caption">Splunk detection of Nmap reconnaissance activity</p>
+                </div>
+                <h4>SSH Brute-force Detection – Multiple login attempts highlighted.</h4>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/splunk_ssh.png" alt="Splunk view showing SSH brute-force detection" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
+                    <p class="scan-caption">Splunk detection of SSH brute-force attempts</p>
+                </div>
+                <h4>ICMP Flood Detection – High-volume ICMP traffic alerts shown.</h4>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/splunk_icmp.png" alt="Splunk view showing ICMP flood detection" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
+                    <p class="scan-caption">Splunk detection of ICMP flood activity</p>
+                </div>
+                <h4>Reverse Shell Detection – Unauthorized shell connections identified</h4>
+                <div class="honeypot-scan">
+                    <img src="../assets/images/splunk_rev.png" alt="Splunk view showing reverse shell detection" class="scan-image clickable-image" onclick="openModal(this.src, this.alt)">
+                    <p class="scan-caption">Splunk detection of reverse shell connection</p>
+                </div>
+            </section>
+
+            
+
+            <section>
+                <h2>Results</h2>
+                <ul>
+                    <li>I successfully detected reconnaissance, brute-force, DoS, and C2 attacks in real time using Snort</li>
+                    <li>I centralized and visualized all alerts within Splunk</li>
+                    <li>I validated that custom rules enhanced detection accuracy</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Conclusion</h2>
+                <p>Through this project, I gained hands-on experience in deploying Snort IDS, writing detection rules, simulating real-world attacks, and forwarding alerts to Splunk for centralized monitoring. I demonstrated how open-source IDS and SIEM tools can be integrated to provide enterprise-level detection and visualization of adversary techniques.</p>
+            </section>
+
+    </div>
+    </main>
+
+    <script src="../script.js"></script>
+    <!-- Modal for image popup -->
+    <div id="imageModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+    <script>
+        function openModal(src, alt) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.style.display = 'block';
+            modalImg.src = src;
+            modalImg.alt = alt || '';
+        }
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            if (modal) modal.style.display = 'none';
+        }
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('imageModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
+
+
